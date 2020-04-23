@@ -14,32 +14,15 @@ class MetadataFetch {
       return null;
     }
 
-    /// Sane defaults; Always return the Domain name as the [title], and a [description] for a given [url]
-    final defaultOutput = Metadata();
-    defaultOutput.title = getDomain(url);
-    defaultOutput.description = url;
+  // Make our network call
+  final response = await http.get(Uri.parse(url));
+  final document = responseToDocument(response);
 
-    // Make our network call
-    final response = await http.get(Uri.parse(url));
-    final headerContentType = response.headers['content-type'];
-
-    if (headerContentType != null && headerContentType.startsWith(r'image/')) {
-      defaultOutput.title = '';
-      defaultOutput.description = '';
-      defaultOutput.image = url;
-      return defaultOutput;
-    }
-
-    final document = responseToDocument(response);
-
-    if (document == null) {
-      return defaultOutput;
-    }
+  if (document == null) {
+    return null;
+  }
 
     final data = _extractMetadata(document);
-    if (data == null) {
-      return defaultOutput;
-    }
 
     return data;
   }
