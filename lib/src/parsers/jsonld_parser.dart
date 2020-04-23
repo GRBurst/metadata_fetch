@@ -54,11 +54,11 @@ class JsonLdParser with BaseMetadataParser {
   @override
   String? get image {
     final data = _jsonData;
+    dynamic result;
     if (data is List && data.isNotEmpty) {
-      return _imageResultToString(data.first['logo'] ?? data.first['image']);
+      return _imageResultToString(data?.first['logo'] ?? data?.first['image']);
     } else if (data is Map) {
-      return _imageResultToString(
-          data.getDynamic('logo') ?? data.getDynamic('image'));
+      return _imageResultToString(data?.getDynamic('logo') ?? data?.getDynamic('image'));
     }
 
     return null;
@@ -76,6 +76,7 @@ class JsonLdParser with BaseMetadataParser {
     return null;
   }
 
+  /// Get the document request URL from Document's [HttpRequestData] extension.
   @override
   String toString() => parse().toString();
 }
